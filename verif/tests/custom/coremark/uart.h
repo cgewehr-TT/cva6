@@ -16,6 +16,14 @@
 #define UART_DLAB_LSB UART_BASE + 0
 #define UART_DLAB_MSB UART_BASE + 4
 
+void write_reg_u8(uintptr_t addr, uint8_t value);
+
+uint8_t read_reg_u8(uintptr_t addr);
+
+int is_transmit_empty();
+
+void write_serial(char a);
+
 void init_uart();
 
 void print_uart(const char* str);

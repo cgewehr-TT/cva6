@@ -14,6 +14,7 @@
 //              A string is printed to the console as soon as a '\n' character is found
 
 interface uart_bus #(
+    parameter string UART_RX_LOG_FILE = "uart",
     parameter int unsigned BAUD_RATE = 115200,
     parameter int unsigned PARITY_EN = 0
 )(
@@ -23,8 +24,6 @@ interface uart_bus #(
 );
 
 /* pragma translate_off */
-`ifndef VERILATOR
-  localparam time BIT_PERIOD = (1000000000 / BAUD_RATE) * 1ns;
 
   logic [7:0]       character;
   logic [256*8-1:0] stringa;
@@ -33,12 +32,28 @@ interface uart_bus #(
   integer           file;
 
   initial begin
+
     tx   = 1'bZ;
-    file = $fopen("uart", "w");
+
+    // file = $fopen("uart", "w");
+    file = $fopen(UART_RX_LOG_FILE, "w");
+
   end
 
+  `ifndef VERILATOR
+  localparam time BIT_PERIOD = (1000000000 / BAUD_RATE) * 1ns;
+  `else
+  // localparam time BIT_PERIOD = 32ps;
+  localparam time BIT_PERIOD = 16ps;
+  // Assumes the UART clock divider = reset value, Verilator testbench runs at 1ps clock period
+  `endif
+
   always begin
+
+    $timeformat(-12,3,"ps",3);
+
     if (rx_en) begin
+
       @(negedge rx);
       #(BIT_PERIOD/2);
       for (int i = 0; i <= 7; i++) begin
@@ -99,6 +114,6 @@ interface uart_bus #(
     tx = 1'b1;
     #(BIT_PERIOD);
   endtask
-`endif
+
 /* pragma translate_on */
 endinterface

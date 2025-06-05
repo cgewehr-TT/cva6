@@ -583,11 +583,7 @@ module ariane_testharness #(
     .AxiDataWidth ( AXI_DATA_WIDTH               ),
     .AxiIdWidth   ( ariane_axi_soc::IdWidthSlave ),
     .AxiUserWidth ( AXI_USER_WIDTH               ),
-`ifndef VERILATOR
     .InclUART     ( 1'b1                     ),
-`else
-    .InclUART     ( 1'b0                     ),
-`endif
     .InclSPI      ( 1'b0                     ),
     .InclEthernet ( 1'b0                     )
   ) i_ariane_peripherals (

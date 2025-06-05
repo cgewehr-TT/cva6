@@ -65,6 +65,9 @@ portable_init(core_portable *p, int *argc, char *argv[])
     (void)p;
     (void)argc;
     (void)argv;
+
+    write_reg_u8(UART_LINE_CONTROL, 0x03);     // 8 bits, no parity, one stop bit
+
 }
 
 void
